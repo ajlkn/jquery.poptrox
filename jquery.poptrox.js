@@ -1,4 +1,4 @@
-/* jquery.poptrox.js v2.3 | (c) n33 | n33.co | MIT licensed */
+/* jquery.poptrox.js v2.3.1 | (c) n33 | n33.co | MIT licensed */
 
 (function($) {
 
@@ -661,7 +661,10 @@
 						}
 					
 					// Create object (based on type)
-						tmp = x.src.match(/http[s]?:\/\/[a-z0-9\.]+\/(.*)/);
+						tmp = x.src.match(/http([s]?):\/\/[a-z0-9\.]+\/(.*)/);
+
+						if (tmp)
+							x.prefix = 'http' + (tmp[1] == 's' ? 's' : '');
 
 						switch (x.type) {
 							
@@ -687,7 +690,7 @@
 						
 							case 'soundcloud':
 								x.object = $('<iframe scrolling="no" frameborder="no" src=""></iframe>');
-								x.src = 'https://w.soundcloud.com/player/?url=' + escape(x.src);
+								x.src = x.prefix + '://w.soundcloud.com/player/?url=' + escape(x.src);
 								x.width = '600';
 								x.height = "166";
 								
@@ -695,13 +698,13 @@
 
 							case 'youtube':
 								x.object = $('<iframe src="" frameborder="0" allowfullscreen="1"></iframe>');
-								x.src = 'http://www.youtube.com/embed/' + tmp[1];
+								x.src = x.prefix + '://www.youtube.com/embed/' + tmp[2];
 								
 								break;
 
 							case 'vimeo':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
-								x.src = 'http://player.vimeo.com/video/' + tmp[1];
+								x.src = x.prefix + '://player.vimeo.com/video/' + tmp[2];
 								
 								break;
 
