@@ -1,4 +1,4 @@
-/* jquery.poptrox.js v2.3.1 | (c) n33 | n33.co | MIT licensed */
+/* jquery.poptrox.js v2.3.2 | (c) n33 | n33.co | MIT licensed */
 
 (function($) {
 
@@ -9,9 +9,14 @@
 		$.fn.poptrox = function(options) {
 
 			// Handle multiple elements
-				if (this.length > 1)
+				if (this.length > 1) {
+				
 					for (var i=0; i < this.length; i++)
 						$(this[i]).poptrox(options);
+					
+					return $(this);
+				
+				}
 
 			// Settings
 				var settings = $.extend({
