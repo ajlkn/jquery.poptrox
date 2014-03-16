@@ -1,4 +1,4 @@
-/* jquery.poptrox.js v2.3.2 | (c) n33 | n33.co | MIT licensed */
+/* jquery.poptrox.js v2.3.3 | (c) n33 | n33.co | MIT licensed */
 
 (function($) {
 
@@ -289,7 +289,7 @@
 					});
 
 				_overlay
-					.prependTo(isMSIE67 ? 'body' : 'html')
+					.prependTo('body')
 					.hide();
 
 				if (isMSIE6)
