@@ -1,4 +1,4 @@
-/* jquery.poptrox.js v2.3.3 | (c) n33 | n33.co | MIT licensed */
+/* jquery.poptrox.js v2.3.4 | (c) n33 | n33.co | MIT licensed */
 
 (function($) {
 
@@ -26,6 +26,7 @@
 					fadeSpeed:						300,						// Global fade speed
 					overlayColor:					'#000000',					// Overlay color
 					overlayOpacity:					0.6,						// Overlay opacity
+					overlayClass:					'poptrox-overlay',			// Overlay class
 					windowMargin:					50,							// Window margin size (in pixels; only comes into play when an image is larger than the viewport)
 					windowHeightPad:				0,							// Window height pad
 					selector:						'a',						// Anchor tag selector
@@ -68,7 +69,7 @@
 
 				var	_top = $(this),
 					_body = $('body'),
-					_overlay = $('<div></div>'),
+					_overlay = $('<div class="' + settings.overlayClass +  '"></div>'),
 					_window = $(window);
 				
 				var	windowWidth,
@@ -361,7 +362,6 @@
 							.css('width', settings.popupWidth + 'px')
 							.css('height', settings.popupHeight + 'px')
 							.css('left', (windowWidth / 2) + 'px')
-							.css('top', (windowHeight / 2) + 'px')
 							.css('top', (windowHeight / 2) + 'px')
 							.css('margin-left', (-1 * (_popup.outerWidth() / 2)) + 'px')
 							.css('margin-top', (-1 * (_popup.outerHeight() / 2)) + 'px')
