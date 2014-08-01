@@ -1,4 +1,4 @@
-/* jquery.poptrox.js v2.3.4 | (c) n33 | n33.co | MIT licensed */
+/* jquery.poptrox.js v2.4 | (c) n33 | n33.co | MIT licensed */
 
 (function($) {
 
@@ -8,7 +8,11 @@
 	// Poptrox prototype method
 		$.fn.poptrox = function(options) {
 
-			// Handle multiple elements
+			// Handle no elements.
+				if (this.length == 0)
+					return $(this);
+
+			// Handle multiple elements.
 				if (this.length > 1) {
 				
 					for (var i=0; i < this.length; i++)
@@ -30,11 +34,12 @@
 					windowMargin:					50,							// Window margin size (in pixels; only comes into play when an image is larger than the viewport)
 					windowHeightPad:				0,							// Window height pad
 					selector:						'a',						// Anchor tag selector
+					parent:							'body',						// Parent selector (ie. where all the popup/overlay stuff gets added).
 					popupSpeed:						300,						// Popup (resize) speed
 					popupWidth:						200,						// Popup width
 					popupHeight:					100,						// Popup height
 					popupIsFixed:					false,						// If true, popup won't resize to fit images
-					useBodyOverflow:				true,						// If true, the BODY tag is set to overflow: hidden when the popup is visible
+					useBodyOverflow:				false,						// If true, the BODY tag is set to overflow: hidden when the popup is visible
 					usePopupEasyClose:				true,						// If true, popup can be closed by clicking on it anywhere
 					usePopupLoader:					true,						// If true, show the popup loader
 					usePopupCloser:					true,						// If true, show the popup closer button/link
@@ -67,26 +72,34 @@
 				
 			// Variables
 
-				var	_top = $(this),
-					_body = $('body'),
-					_overlay = $('<div class="' + settings.overlayClass +  '"></div>'),
-					_window = $(window);
+				var	$this = $(this),
+					$body = $('body'),
+					$overlay = $('<div class="' + settings.overlayClass +  '"></div>'),
+					$window = $(window);
 				
 				var	windowWidth,
 					windowHeight,
 					queue = [],
 					navPos = 0,
 					isLocked = false,
-					cache = new Array(),
-					isMSIE = navigator.userAgent.match(/MSIE ([0-9]+)\./),
-					isMSIE6 = isMSIE && (RegExp.$1 == 6),
-					isMSIE67 = isMSIE && (RegExp.$1 < 8),
-					pos = (isMSIE6 ? 'absolute' : 'fixed');
+					cache = new Array();
 				
 				function updateWH() {
 
 					windowWidth = $(window).width();
 					windowHeight = $(window).height() + settings.windowHeightPad;
+
+					var dw = Math.abs($popup.width() - $popup.outerWidth()), dh = Math.abs($popup.height() - $popup.outerHeight());
+					var nw = $x.width(), nh = $x.height();
+					var maxw = windowWidth - (settings.windowMargin * 2) - dw, maxh = windowHeight - (settings.windowMargin * 2) - dh;
+
+					$popup
+						.css('min-width', settings.popupWidth)
+						.css('min-height', settings.popupHeight);
+
+					$pic.children()
+						.css('max-width', maxw)
+						.css('max-height', maxh);
 
 				}
 
@@ -108,34 +121,37 @@
 					}
 
 				// Get popup
-					var _popup;
+					var $popup;
 				
 					if (settings.popupSelector)
-						_popup = $(settings.popupSelector);
+						$popup = $(settings.popupSelector);
 					else
-						_popup = $('<div class="' + settings.popupClass + '">' + (settings.popupLoaderSelector ? '<div class="loader">' + settings.popupLoaderText + '</div>' : '') + '<div class="pic"></div>' + (settings.popupCaptionSelector ? '<div class="caption"></div>' : '') + (settings.popupCloserSelector ? '<span class="closer">' + settings.popupCloserText + '</span>' : '') + (settings.popupNavPreviousSelector ? '<div class="nav-previous"></div>' : '') + (settings.popupNavNextSelector ? '<div class="nav-next"></div>' : '') + '</div>');
+						$popup = $('<div class="' + settings.popupClass + '">' + (settings.popupLoaderSelector ? '<div class="loader">' + settings.popupLoaderText + '</div>' : '') + '<div class="pic"></div>' + (settings.popupCaptionSelector ? '<div class="caption"></div>' : '') + (settings.popupCloserSelector ? '<span class="closer">' + settings.popupCloserText + '</span>' : '') + (settings.popupNavPreviousSelector ? '<div class="nav-previous"></div>' : '') + (settings.popupNavNextSelector ? '<div class="nav-next"></div>' : '') + '</div>');
 
 				// Get popup components
-					var	_pic = _popup.find('.pic'),
-						_x = $(),
-						_loader = _popup.find(settings.popupLoaderSelector),
-						_caption = _popup.find(settings.popupCaptionSelector),
-						_closer = _popup.find(settings.popupCloserSelector),
-						_nav_next = _popup.find(settings.popupNavNextSelector),
-						_nav_previous = _popup.find(settings.popupNavPreviousSelector),
-						_nav = _nav_next.add(_nav_previous);
+					var	$pic = $popup.find('.pic'),
+						$x = $(),
+						$loader = $popup.find(settings.popupLoaderSelector),
+						$caption = $popup.find(settings.popupCaptionSelector),
+						$closer = $popup.find(settings.popupCloserSelector),
+						$nav_next = $popup.find(settings.popupNavNextSelector),
+						$nav_previous = $popup.find(settings.popupNavPreviousSelector),
+						$nav = $nav_next.add($nav_previous);
 
 				// Apply default styling?
 					if (settings.usePopupDefaultStyling) {
 						
-						_popup.css('background', settings.popupBackgroundColor);
-						_popup.css('color', settings.popupTextColor);
-						_popup.css('padding', settings.popupPadding + 'px');
+						$popup
+							.css('background', settings.popupBackgroundColor)
+							.css('color', settings.popupTextColor)
+							.css('padding', settings.popupPadding + 'px');
 							
-						if (_caption.length > 0) {
+						if ($caption.length > 0) {
 							
-							_popup.css('padding-bottom', settings.popupCaptionHeight + 'px');
-							_caption
+							$popup
+								.css('padding-bottom', settings.popupCaptionHeight + 'px');
+							
+							$caption
 								.css('position', 'absolute')
 								.css('left', '0')
 								.css('bottom', '0')
@@ -145,12 +161,12 @@
 								.css('line-height', settings.popupCaptionHeight + 'px');
 								
 							if (settings.popupCaptionTextSize)
-								_caption.css('font-size', popupCaptionTextSize);
+								$caption.css('font-size', popupCaptionTextSize);
 						
 						}
 							
-						if (_closer.length > 0)
-							_closer
+						if ($closer.length > 0)
+							$closer
 								.html(settings.popupCloserText)
 								.css('font-size', settings.popupCloserTextSize)
 								.css('background', settings.popupCloserBackgroundColor)
@@ -166,9 +182,9 @@
 								.css('top', '0')
 								.css('right', '-40px');
 								
-						if (_loader.length > 0) {
+						if ($loader.length > 0) {
 							
-							_loader
+							$loader
 								.html('')
 								.css('position', 'relative')
 								.css('font-size', settings.popupLoaderTextSize)
@@ -181,27 +197,27 @@
 										.css('overflow', 'hidden')
 										.css('line-height', Math.floor(settings.popupHeight / 2) + 'px')
 										.css('text-align', 'center')
-										.css('margin-top', Math.floor((_popup.height() - x.height() + (_caption.length > 0 ? _caption.height() : 0)) / 2))
+										.css('margin-top', Math.floor(($popup.height() - x.height() + ($caption.length > 0 ? $caption.height() : 0)) / 2))
 										.css('color', (settings.popupTextColor ? settings.popupTextColor : ''))
 										.on('xfin', function() { x.fadeTo(300, 0.5, function() { x.trigger('xfout'); }); })
 										.on('xfout', function() { x.fadeTo(300, 0.05, function() { x.trigger('xfin'); }); })
 										.trigger('xfin');
 									
-									_loader.append(x);
+									$loader.append(x);
 								
 								})
 								.on('stopSpinning', function(e) {
 									
-									var x = _loader.find('div');
+									var x = $loader.find('div');
 									x.remove();
 								
 								});
 						
 						}
 						
-						if (_nav.length == 2) {
+						if ($nav.length == 2) {
 							
-							_nav
+							$nav
 								.css('font-size', '75px')
 								.css('text-align', 'center')
 								.css('color', '#fff')
@@ -229,12 +245,12 @@
 							
 							}
 							
-							_nav_next
+							$nav_next
 								.css('right', '0')
 								.css('width', wn)
 								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; right: 0; margin-top: -50px;">&gt;</div>');
 
-							_nav_previous
+							$nav_previous
 								.css('left', '0')
 								.css('width', wp)
 								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; left: 0; margin-top: -50px;">&lt;</div>');
@@ -244,102 +260,99 @@
 					}
 			
 			// Main
-				_window
-					.on('orientationchange', function() {
-						_window.trigger('resize');
-					})
-					.resize(function() {
-						
+				$window
+					.on('resize orientationchange', function() {
 						updateWH();
-					
-						_popup.trigger('poptrox_close');
-					
 					});
 
-				_caption
+				$caption
 					.on('update', function(e, s) {
 						
 						if (!s || s.length == 0)
 							s = settings.popupBlankCaptionText;
 						
-						_caption.html(s);
+						$caption.html(s);
 					
 					});
 				
-				_closer
+				$closer
 					.css('cursor', 'pointer')
 					.on('click', function(e) {
 						
 						e.preventDefault();
 						e.stopPropagation();
 					
-						_popup.trigger('poptrox_close');
+						$popup.trigger('poptrox_close');
 						
 						return true;
 					
 					});
 
-				_nav_next
+				$nav_next
 					.on('click', function() {
-						_popup.trigger('poptrox_next');
+						$popup.trigger('poptrox_next');
 					});
 
-				_nav_previous
+				$nav_previous
 					.on('click', function() {
-						_popup.trigger('poptrox_previous');
+						$popup.trigger('poptrox_previous');
 					});
 
-				_overlay
-					.prependTo('body')
-					.hide();
-
-				if (isMSIE6)
-					_overlay.css('position', 'absolute');
-				else
-					_overlay
-						.css('position', pos)
-						.css('left', 0)
-						.css('top', 0)
-						.css('z-index', settings.baseZIndex)
-						.css('width', '200%')
-						.css('height', '200%')
-						.css('background-color', settings.overlayColor);
-
-				_overlay
+				$overlay
+					.css('position', 'fixed')
+					.css('left', 0)
+					.css('top', 0)
+					.css('z-index', settings.baseZIndex)
+					.css('width', '100%')
+					.css('height', '100%')
+					.css('text-align', 'center')
 					.css('cursor', 'pointer')
+					.appendTo(settings.parent)
+					.prepend('<div style="display:inline-block;height:100%;vertical-align:middle;"></div>')
+					.append('<div style="position:absolute;left:0;top:0;width:100%;height:100%;background:' + settings.overlayColor + ';opacity:' + settings.overlayOpacity + ';filter:alpha(opacity=' + (settings.overlayOpacity * 100) + ');"></div>')
+					.hide()
+					.on('touchmove', function(e) {
+						return false;
+					})
 					.on('click', function(e) {
 
 						e.preventDefault();
 						e.stopPropagation();
 
-						_popup.trigger('poptrox_close');
+						$popup.trigger('poptrox_close');
 
 					});
-
+				
 				if (settings.usePopupEasyClose) {
 
-					_pic
+					$pic
 						.css('cursor', 'pointer')
 						.on('click', function(e) {
 
 							e.preventDefault();
 							e.stopPropagation();
 
-							_popup.trigger('poptrox_close');
+							$popup.trigger('poptrox_close');
 
 						});
 
 				}
 
-				_popup
+				$popup
+					.css('display', 'inline-block')
+					.css('vertical-align', 'middle')
+					.css('position', 'relative')
+					.css('z-index', 1)
+					.appendTo($overlay)
+					.hide()
 					.on('poptrox_next', function() {
 						
 						var x = navPos + 1;
-						
+
 						if (x >= queue.length)
 							x = 0;
 						
-						_popup.trigger('poptrox_switch', [x]);
+						$popup.trigger('poptrox_switch', [x]);
 					
 					})
 					.on('poptrox_previous', function() {
@@ -349,29 +362,23 @@
 						if (x < 0)
 							x = queue.length - 1;
 					
-						_popup.trigger('poptrox_switch', [x]);
+						$popup.trigger('poptrox_switch', [x]);
 					
 					})
 					.on('poptrox_reset', function() {
 						
 						updateWH();
 
-						_popup
-							.css('position', pos)
-							.css('z-index', settings.baseZIndex + 1)
-							.css('width', settings.popupWidth + 'px')
-							.css('height', settings.popupHeight + 'px')
-							.css('left', (windowWidth / 2) + 'px')
-							.css('top', (windowHeight / 2) + 'px')
-							.css('margin-left', (-1 * (_popup.outerWidth() / 2)) + 'px')
-							.css('margin-top', (-1 * (_popup.outerHeight() / 2)) + 'px')
-						
-						_loader.hide().trigger('stopSpinning');
-						_caption.hide();
-						_closer.hide();
-						_nav.hide();
-						_pic.hide();
-						_x.detach();
+						$popup
+							.data('width', settings.popupWidth)
+							.data('height', settings.popupHeight);
+
+						$loader.hide().trigger('stopSpinning');
+						$caption.hide();
+						$closer.hide();
+						$nav.hide();
+						$pic.hide();
+						$x.detach();
 					
 					})
 					.on('poptrox_open', function(e, index) {
@@ -382,14 +389,14 @@
 						isLocked = true;
 					
 						if (settings.useBodyOverflow)
-							_body.css('overflow', 'hidden');
+							$body.css('overflow', 'hidden');
 
 						if (settings.onPopupOpen)
 							(settings.onPopupOpen)();
 
-						_overlay
-							.fadeTo(settings.fadeSpeed, settings.overlayOpacity, function() {
-								_popup.trigger('poptrox_switch', [index, true]);
+						$overlay
+							.fadeTo(settings.fadeSpeed, 1.0, function() {
+								$popup.trigger('poptrox_switch', [index, true]);
 							});
 
 					})
@@ -402,34 +409,38 @@
 						
 						isLocked = true;
 
+						$popup
+							.css('width', $popup.data('width'))
+							.css('height', $popup.data('height'));
+							
 						// Cleanup from previous
-							_caption.hide();
-							if (_x.attr('src'))
-								_x.attr('src', '');
-							_x.detach();
-						
+							$caption.hide();
+							if ($x.attr('src'))
+								$x.attr('src', '');
+							$x.detach();
+							
 						// Activate new object
 							x = queue[index];
-							_x = x.object;
-							_x.off('load');
+							$x = x.object;
+							$x.off('load');
 						
-							_pic
-								.css('text-indent', '-9999em')
+							$pic
+								.css('text-indent', '-9999px')
 								.show()
-								.append(_x);
+								.append($x);
 
 							if (x.type == 'ajax')
 								$.get(x.src, function(data) {
 									
-									_x.html(data);
-									_x.trigger('load');
+									$x.html(data);
+									$x.trigger('load');
 								
 								});
 							else
-								_x.attr('src', x.src);
+								$x.attr('src', x.src);
 							
 							if (x.type != 'image')
-								_x
+								$x
 									.css('position', 'relative')
 									.css('outline', '0')
 									.css('z-index', settings.baseZIndex + 100)
@@ -437,91 +448,67 @@
 									.height(x.height);
 
 						// Initialize
-							_loader.trigger('startSpinning').fadeIn(300);
-							_popup.show();
+							$loader.trigger('startSpinning').fadeIn(300);
+							$popup.show();
 
 						if (settings.popupIsFixed) {
 							
-							_popup
+							$popup
 								.width(settings.popupWidth)
-								.height(settings.popupHeight)
-								.css('margin-left', (-1 * (_popup.innerWidth() / 2)) + 'px')
-								.css('margin-top', (-1 * (_popup.innerHeight() / 2)) + 'px');
+								.height(settings.popupHeight);
 
-							_x.load(function() {
+							$x.load(function() {
 							
-								_x.off('load');
-								_loader.hide().trigger('stopSpinning');
-								_caption.trigger('update', [x.captionText]).fadeIn(settings.fadeSpeed);
-								_closer.fadeIn(settings.fadeSpeed);
-								_pic.css('text-indent', 0).hide().fadeIn(settings.fadeSpeed, function() { isLocked = false; });
+								$x.off('load');
+								$loader.hide().trigger('stopSpinning');
+								$caption.trigger('update', [x.captionText]).fadeIn(settings.fadeSpeed);
+								$closer.fadeIn(settings.fadeSpeed);
+								$pic.css('text-indent', 0).hide().fadeIn(settings.fadeSpeed, function() { isLocked = false; });
 								navPos = index;
-								_nav.fadeIn(settings.fadeSpeed);
+								$nav.fadeIn(settings.fadeSpeed);
 
 							});
 						
 						}
 						else {
 							
-							_x.load(function() {
+							$x.load(function() {
 								
-								_x.off('load');
-
 								updateWH();
 
-								var dw = Math.abs(_popup.width() - _popup.outerWidth()), dh = Math.abs(_popup.height() - _popup.outerHeight());
-								var nw = _x.width(), nh = _x.height();
-								var maxw = windowWidth - (settings.windowMargin * 2) - dw, maxh = windowHeight - (settings.windowMargin * 2) - dh;
-								
-								_loader.hide().trigger('stopSpinning');
-								
-								if (nw > maxw || nh > maxh) {
-									
-									var multW, multH, m;
-									
-									multW = maxw / nw;
-									multH = maxh / nh;
-									m = Math.min(multW, multH);
-									
-									nw = Math.floor(m * nw);
-									nh = Math.floor(m * nh);
+								$x.off('load');
+								$loader.hide().trigger('stopSpinning');
 
-									_x.width(nw).height(nh);
+								var	nw = $x.width(),
+									nh = $x.height(),
+									f = function() {
+
+										$caption.trigger('update', [x.captionText]).fadeIn(settings.fadeSpeed);
+										$closer.fadeIn(settings.fadeSpeed);
+										$pic.css('text-indent', 0).hide().fadeIn(settings.fadeSpeed, function() { isLocked = false; });
+										navPos = index;
+										$nav.fadeIn(settings.fadeSpeed);
+
+										$popup
+											.data('width', nw)
+											.data('height', nh)
+											.css('width', 'auto')
+											.css('height', 'auto');
+
+									};
 								
-								}
-
-								if (_popup.innerWidth() == nw + dw
-								&&	_popup.innerHeight() == nh + dh) {
-									
-									_caption.trigger('update', [x.captionText]).fadeIn(settings.fadeSpeed);
-									_closer.fadeIn(settings.fadeSpeed);
-									_pic.css('text-indent', 0).hide().fadeIn(settings.fadeSpeed, function() { isLocked = false; });
-									navPos = index;
-
-								}
+								if (nw == $popup.data('width')
+								&&	nh == $popup.data('height'))
+									(f)();
 								else
-									_popup
-										.animate({
-											width: nw,
-											height: nh,
-											marginLeft: (-1 * (nw / 2)) - (dw / 2),
-											marginTop: (-1 * (nh / 2)) - (dh / 2)
-										}, settings.popupSpeed, 'swing', function() {
-											
-											_caption.trigger('update', [x.captionText]).fadeIn(settings.fadeSpeed);
-											_closer.fadeIn(settings.fadeSpeed);
-											_pic.css('text-indent', 0).hide().fadeIn(settings.fadeSpeed, function() { isLocked = false; });
-											navPos = index;
-											_nav.fadeIn(settings.fadeSpeed);
+									$popup.animate({ width: nw, height: nh }, settings.popupSpeed, 'swing', f);
 										
-										});
-							
 							});
 						
 						}
 						
 						if (x.type != 'image')
-							_x.trigger('load');
+							$x.trigger('load');
 					
 					})
 					.on('poptrox_close', function() {
@@ -531,32 +518,30 @@
 					
 						isLocked = true;
 					
-						_popup
+						$popup
 							.hide()
 							.trigger('poptrox_reset');
 					
 						if (settings.onPopupClose)
 							(settings.onPopupClose)();
 					
-						_overlay
+						$overlay
 							.fadeOut(settings.fadeSpeed, function() {
 							
 								if (settings.useBodyOverflow)
-									_body.css('overflow', 'auto');
+									$body.css('overflow', 'auto');
 									
 								isLocked = false;
 							
 							});
 					
 					})
-					.prependTo('body')
-					.hide()
 					.trigger('poptrox_reset');
 
-				_window
+				$window
 					.keydown(function(e) {
 
-						if (_popup.is(':visible')) {
+						if ($popup.is(':visible')) {
 							
 							switch (e.keyCode) {
 								
@@ -565,7 +550,7 @@
 								
 									if (settings.usePopupNav) {
 										
-										_popup.trigger('poptrox_previous');
+										$popup.trigger('poptrox_previous');
 										return false;
 									
 									}
@@ -576,7 +561,7 @@
 									
 									if (settings.usePopupNav) {
 										
-										_popup.trigger('poptrox_next');
+										$popup.trigger('poptrox_next');
 										return false;
 									
 									}
@@ -585,7 +570,7 @@
 
 								case 27:
 									
-									_popup.trigger('poptrox_close');
+									$popup.trigger('poptrox_close');
 									return false;
 
 									break;
@@ -596,7 +581,7 @@
 					
 					});
 				
-				_top.find(settings.selector).each(function(index) {
+				$this.find(settings.selector).each(function(index) {
 					
 					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox');
 
@@ -714,7 +699,7 @@
 								break;
 
 							default:
-								x.object = $('<img src="" alt="" />');
+								x.object = $('<img src="" alt="" style="vertical-align:bottom" />');
 								
 								if (settings.preload) {
 									
@@ -727,7 +712,8 @@
 						
 						}
 
-					queue.push(x);
+					if (x.type != 'ignore')
+						queue.push(x);
 					
 					i.attr('title', '');
 					
@@ -740,7 +726,7 @@
 								e.preventDefault();
 								e.stopPropagation();
 
-								_popup.trigger('poptrox_open', [index]);
+								$popup.trigger('poptrox_open', [index]);
 
 							});
 
