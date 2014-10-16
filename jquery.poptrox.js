@@ -642,6 +642,10 @@
 									x.type = 'vimeo';
 									break;
 
+								case 'wistia.net':
+									x.type = 'wistia';
+									break;
+
 								default:
 									x.type = 'image';
 									break;
@@ -695,6 +699,12 @@
 							case 'vimeo':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
 								x.src = x.prefix + '://player.vimeo.com/video/' + tmp[2];
+								
+								break;
+
+							case 'wistia':
+								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
+								x.src = x.prefix + '://fast.wistia.net/' + tmp[2];
 								
 								break;
 
