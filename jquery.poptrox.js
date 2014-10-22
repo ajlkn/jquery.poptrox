@@ -35,6 +35,8 @@
 					windowHeightPad:				0,							// Window height pad
 					selector:						'a',						// Anchor tag selector
 					parent:							'body',						// Parent selector (ie. where all the popup/overlay stuff gets added).
+					captionSelector:				'img',						// Selector to get the caption from
+					captionSelectorAttribute:		'title',					// Selector's attribute to get the caption from, set to false to get it from the selector's content instead
 					popupSpeed:						300,						// Popup (resize) speed
 					popupWidth:						200,						// Popup width
 					popupHeight:					100,						// Popup height
@@ -583,12 +585,12 @@
 				
 				$this.find(settings.selector).each(function(index) {
 					
-					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox');
+					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox'), c = a.find(settings.captionSelector);
 
 					x = {
 
 						src:			a.attr('href'),
-						captionText:	i.attr('title'),
+						captionText:	settings.captionSelectorAttribute?c.attr(settings.captionSelectorAttribute):c.text(),
 						width:			a.attr('width'),
 						height:			a.attr('height'),
 						type:			null,
