@@ -60,6 +60,8 @@
 					popupBlankCaptionText:			'(untitled)',				// Applied to images that don't have captions (when captions are enabled)
 					popupCloserText:				'&#215;',					// Popup closer text
 					popupLoaderText:				'&bull;&bull;&bull;&bull;',	// Popup loader text
+					popupPreviousText:				'&lt;',						// Popup Nav Previous text
+					popupNextText:					'&gt;',						// Popup Nav Next text
 					popupClass:						'poptrox-popup',			// Popup class
 					popupSelector:					null,						// (Advanced) Popup selector (use this if you want to replace the built-in popup)
 					popupLoaderSelector:			'.loader',					// (Advanced) Popup Loader selector
@@ -250,12 +252,12 @@
 							$nav_next
 								.css('right', '0')
 								.css('width', wn)
-								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; right: 0; margin-top: -50px;">&gt;</div>');
+								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; right: 0; margin-top: -50px;">'+settings.popupNextText+'</div>');
 
 							$nav_previous
 								.css('left', '0')
 								.css('width', wp)
-								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; left: 0; margin-top: -50px;">&lt;</div>');
+								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; left: 0; margin-top: -50px;">'+settings.popupPreviousText+'</div>');
 						
 						}
 					
