@@ -585,6 +585,10 @@
 					
 					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox');
 
+					// No href? Bail.
+						if (!a.attr('href'))
+							return;
+
 					x = {
 
 						src:			a.attr('href'),
