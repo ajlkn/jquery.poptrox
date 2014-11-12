@@ -140,7 +140,7 @@ The `data-poptrox` attribute breaks down like this:
 - Example:
 
 ```html
-<a href="http://fast.wistia.net/embed/iframe/fe8t32e27x" data-poptrox="wistia,800,480"><img src="path/to/thumbnail.jpg" /></a>
+<a href="http://fast.wistia.net/embed/iframe/fe8t32e27x" data-poptrox="wistia,800x480"><img src="path/to/thumbnail.jpg" /></a>
 ```
 
 ### Brightcove Videos
