@@ -105,6 +105,16 @@ The `data-poptrox` attribute breaks down like this:
 <a href="http://vimeo.com/22439234" data-poptrox="vimeo,800x480"><img src="path/to/thumbnail.jpg" /></a>
 ```
 
+### Wistia Videos
+
+- Link format: `http://fast.wistia.net/embed/iframe/fe8t32e27x` (found via "Share" or "Get Link")
+- Type: `wistia`
+- Example:
+
+```html
+<a href="http://fast.wistia.net/embed/iframe/fe8t32e27x" data-poptrox="wistia,800,480"><img src="path/to/thumbnail.jpg" /></a>
+```
+
 ### Brightcove Videos
 
 - Link format: `http://bcove.me/xxxxxxxx` (found via "Share" or "Get Link")
