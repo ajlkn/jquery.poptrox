@@ -1,7 +1,7 @@
-# jquery.poptrox: Popup galleries for jQuery
+# A lightbox gallery plugin for jQuery
 
-Adds popup galleries to jQuery. Heavily customizable, easy to use, and built to
-support images, YouTube videos, Vimeo videos, Soundcloud tracks, IFRAMEs, and AJAX content.
+Adds lightbox galleries to jQuery. Heavily customizable, easy to use, and built to
+support images, videos (YouTube, Vimeo, Wistia, Brightcove), Soundcloud tracks, IFRAMEs, and AJAX content.
 
 Requires jQuery 1.7+.
 
