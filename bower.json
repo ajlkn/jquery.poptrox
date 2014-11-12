@@ -1,6 +1,6 @@
 {
 	"name": "jquery.poptrox",
-	"version": "2.5.0-dev",
+	"version": "2.5.0",
 	"description": "A lightbox gallery plugin for jQuery.", 
 	"keywords": [ "jquery", "gallery", "lightbox" ],
 	"homepage": "http://n33.co",
