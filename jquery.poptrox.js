@@ -36,6 +36,8 @@
 					selector:						'a',						// Anchor tag selector
 					caption:						null,						// Caption settings (see docs)
 					parent:							'body',						// Parent selector (ie. where all the popup/overlay stuff gets added).
+					captionSelector:				'img',						// Selector to get the caption from
+					captionSelectorAttribute:		'title',					// Selector's attribute to get the caption from, set to false to get it from the selector's content instead
 					popupSpeed:						300,						// Popup (resize) speed
 					popupWidth:						200,						// Popup width
 					popupHeight:					100,						// Popup height
@@ -60,6 +62,8 @@
 					popupBlankCaptionText:			'(untitled)',				// Applied to images that don't have captions (when captions are enabled)
 					popupCloserText:				'&#215;',					// Popup closer text
 					popupLoaderText:				'&bull;&bull;&bull;&bull;',	// Popup loader text
+					popupPreviousText:				'&lt;',						// Popup Nav Previous text
+					popupNextText:					'&gt;',						// Popup Nav Next text
 					popupClass:						'poptrox-popup',			// Popup class
 					popupSelector:					null,						// (Advanced) Popup selector (use this if you want to replace the built-in popup)
 					popupLoaderSelector:			'.loader',					// (Advanced) Popup Loader selector
@@ -250,12 +254,12 @@
 							$nav_next
 								.css('right', '0')
 								.css('width', wn)
-								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; right: 0; margin-top: -50px;">&gt;</div>');
+								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; right: 0; margin-top: -50px;">'+settings.popupNextText+'</div>');
 
 							$nav_previous
 								.css('left', '0')
 								.css('width', wp)
-								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; left: 0; margin-top: -50px;">&lt;</div>');
+								.html('<div style="position: absolute; height: 100px; width: 125px; top: 50%; left: 0; margin-top: -50px;">'+settings.popupPreviousText+'</div>');
 						
 						}
 					
@@ -586,7 +590,7 @@
 				
 				$this.find(settings.selector).each(function(index) {
 					
-					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox');
+					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox'), c = a.find(settings.captionSelector);
 
 					// No href? Bail.
 						if (!a.attr('href'))
@@ -595,7 +599,7 @@
 					x = {
 
 						src:			a.attr('href'),
-						captionText:	i.attr('title'),
+						captionText:	settings.captionSelectorAttribute?c.attr(settings.captionSelectorAttribute):c.text(),
 						width:			a.attr('width'),
 						height:			a.attr('height'),
 						type:			null,
