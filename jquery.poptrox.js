@@ -650,6 +650,10 @@
 									x.type = 'wistia';
 									break;
 
+								case 'bcove.me':
+									x.type = 'bcove';
+									break;
+
 								default:
 									x.type = 'image';
 									break;
@@ -709,6 +713,12 @@
 							case 'wistia':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
 								x.src = x.prefix + '://fast.wistia.net/' + tmp[2];
+								
+								break;
+
+							case 'bcove':
+								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1" width="100%"></iframe>');
+								x.src = x.prefix + '://bcove.me/' + tmp[2];
 								
 								break;
 

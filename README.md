@@ -105,6 +105,16 @@ The `data-poptrox` attribute breaks down like this:
 <a href="http://vimeo.com/22439234" data-poptrox="vimeo,800x480"><img src="path/to/thumbnail.jpg" /></a>
 ```
 
+### Brightcove Videos
+
+- Link format: `http://bcove.me/xxxxxxxx` (found via "Share" or "Get Link")
+- Type: `bcove`
+- Example:
+
+```html
+<a href="http://bcove.me/qly3wjdw" data-poptrox="bcove,636x360"><img src="path/to/thumbnail.jpg" /></a>
+```
+
 ### Soundcloud Tracks
 
 - Link format: `https://api.soundcloud.com/tracks/xxxxxxxx` (found via the "Share" button 
