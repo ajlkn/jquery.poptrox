@@ -629,7 +629,7 @@
 							
 							tmp = x.src.match(/http[s]?:\/\/([a-z0-9\.]+)\/.*/);
 
-							if (!tmp || tmp.length < 3)
+							if (!tmp || tmp.length < 2)
 								tmp = [false];
 
 							switch (tmp[1]) {
@@ -640,18 +640,26 @@
 
 								case 'youtu.be':
 									x.type = 'youtube';
+									x.width = 800;
+									x.height = 480;
 									break;
 
 								case 'vimeo.com':
 									x.type = 'vimeo';
+									x.width = 800;
+									x.height = 480;
 									break;
 
 								case 'wistia.net':
 									x.type = 'wistia';
+									x.width = 800;
+									x.height = 480;
 									break;
 
 								case 'bcove.me':
 									x.type = 'bcove';
+									x.width = 640;
+									x.height = 360;
 									break;
 
 								default:
