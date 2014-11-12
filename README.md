@@ -192,6 +192,8 @@ foo.poptrox({
 												// when the popup is visible
 	usePopupEasyClose:			true,			// If true, popup can be closed by clicking on
 												// it anywhere
+	usePopupForceClose:			false,			// If true, popup can be closed even while content
+												// is loading
 	usePopupLoader:				true,			// If true, show the popup loader
 	usePopupCloser:				true,			// If true, show the popup closer button/link
 	usePopupCaption:			false,			// If true, show the popup image caption
