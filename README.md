@@ -70,6 +70,34 @@ a `title` attribute to your `<img>` element, like so:
 <a href="path/to/image.jpg"><img src="path/to/image_thumbnail.jpg" title="This right here is a caption." /></a>
 ```
 
+- You can also use the `caption` option to tell Poptrox where it should look for captions:
+
+```js
+caption: null
+```
+
+The default behavior, which simply uses the `title` attribute of each `<img>` element.
+
+```js
+caption: { selector: "xxxxxx" }
+```
+
+Uses the content of the element pointed to by the selector `xxxxxx` (must be inside the anchor).
+
+```js
+caption: { selector: "xxxxxx", remove: true }
+```
+
+Uses the content of the element pointed to by the selector `xxxxxx` (must be inside the anchor),
+then **removes** the element.
+
+```js
+caption: function(a) { /* return something */ },
+```
+
+(Advanced) Uses a callback function to figure out the caption, where `a` is a jQuery object
+pointing to the anchor tag.
+
 ## Supported Types
 
 In addition to images, popups can also show other stuff (like YouTube videos).
@@ -184,6 +212,7 @@ foo.poptrox({
 												// play when an image is larger than the viewport)
 	windowHeightPad:			0,				// Window height pad
 	selector:					'a',			// Anchor tag selector
+	caption:					null,			// Caption settings (see docs)
 	popupSpeed:					300,			// Popup (resize) speed
 	popupWidth:					200,			// Popup width
 	popupHeight:				100,			// Popup height

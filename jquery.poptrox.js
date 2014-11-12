@@ -34,6 +34,7 @@
 					windowMargin:					50,							// Window margin size (in pixels; only comes into play when an image is larger than the viewport)
 					windowHeightPad:				0,							// Window height pad
 					selector:						'a',						// Anchor tag selector
+					caption:						null,						// Caption settings (see docs)
 					parent:							'body',						// Parent selector (ie. where all the popup/overlay stuff gets added).
 					popupSpeed:						300,						// Popup (resize) speed
 					popupWidth:						200,						// Popup width
@@ -601,6 +602,38 @@
 						object:			null
 
 					};
+					
+					// Determine caption.
+						
+						// No caption setting? Use default (title attribute of image).
+							if (!settings.caption)
+								c = i.attr('title');
+						
+						// Function?
+							else if (typeof(settings.caption) == 'function')
+								c = (settings.caption)(a);
+						
+						// Selector?
+							else if ('selector' in settings.caption) {
+							
+								var s;
+							
+								s = a.find(settings.caption.selector);
+								
+								if ('attribute' in settings.caption)
+									c = s.attr(settings.caption.attribute);
+								else {
+									
+									c = s.html();
+									
+									if (settings.caption.remove === true)
+										s.remove();
+								
+								}
+
+							}
+					
+						x.captionText = c;
 
 					// If a data attribute exists, use it
 						if (data) {
