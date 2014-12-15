@@ -104,6 +104,10 @@
 
 				}
 
+				function getSlides() {
+					return $(settings.selector, $this).not("[data-poptrox^='ignore']");
+				}
+
 				// Disable unused features
 					if (!settings.usePopupLoader)
 						settings.popupLoaderSelector = null;
@@ -348,7 +352,7 @@
 					.hide()
 					.on('poptrox_next', function(e) {
 						
-						var slides = $(settings.selector, $this),
+						var slides = getSlides(),
 							x = navPos + 1;
 
 						if (x >= slides.length)
@@ -357,9 +361,9 @@
 						
 						return open(slides[x], e);
 					})
-					.on('poptrox_previous', function() {
+					.on('poptrox_previous', function(e) {
 					
-						var slides = $(settings.selector, $this),
+						var slides = getSlides(),
 							x = navPos - 1;
 					
 						if (x < 0)
@@ -786,20 +790,15 @@
 						
 						}
 
-					if (slide.type != 'ignore')
-						link
-							//.attr('href', '')
-							.css('outline', 0);
-//							.on('click', function(e) {
-								e.preventDefault();
-								e.stopPropagation();
-								$popup.trigger('poptrox_open', [slide]);
-
-						//	});
+					if (slide.type != 'ignore') {
+						link.css('outline', 0);
+						e.preventDefault();
+						e.stopPropagation();
+						$popup.trigger('poptrox_open', [slide]);
+					}
 
 				}
 
-				//$this.find(settings.selector).each(function(index) {
 				$this.delegate(settings.selector, 'click', function (e) {
 					open(this, e);
 				});
