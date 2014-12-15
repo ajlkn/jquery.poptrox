@@ -81,7 +81,6 @@
 				
 				var	windowWidth,
 					windowHeight,
-					queue = [],
 					navPos = 0,
 					isLocked = false,
 					cache = new Array();
@@ -347,24 +346,26 @@
 					.css('z-index', 1)
 					.appendTo($overlay)
 					.hide()
-					.on('poptrox_next', function() {
+					.on('poptrox_next', function(e) {
 						
-						var x = navPos + 1;
+						var slides = $(settings.selector, $this),
+							x = navPos + 1;
 
-						if (x >= queue.length)
+						if (x >= slides.length)
 							x = 0;
 						
-						$popup.trigger('poptrox_switch', [x]);
-					
+						
+						return open(slides[x], e);
 					})
 					.on('poptrox_previous', function() {
 					
-						var x = navPos - 1;
+						var slides = $(settings.selector, $this),
+							x = navPos - 1;
 					
 						if (x < 0)
-							x = queue.length - 1;
+							x = slides.length - 1;
 					
-						$popup.trigger('poptrox_switch', [x]);
+						return open(slides[x], e);
 					
 					})
 					.on('poptrox_reset', function() {
@@ -383,7 +384,7 @@
 						$x.detach();
 					
 					})
-					.on('poptrox_open', function(e, index) {
+					.on('poptrox_open', function(e, slide) {
 					
 						if (isLocked)
 							return true;
@@ -398,11 +399,11 @@
 
 						$overlay
 							.fadeTo(settings.fadeSpeed, 1.0, function() {
-								$popup.trigger('poptrox_switch', [index, true]);
+								$popup.trigger('poptrox_switch', [slide, true]);
 							});
 
 					})
-					.on('poptrox_switch', function(e, index, ignoreLock) {
+					.on('poptrox_switch', function(e, slide, ignoreLock) {
 						
 						var x, img;
 
@@ -422,7 +423,7 @@
 							$x.detach();
 							
 						// Activate new object
-							x = queue[index];
+							x = slide;
 							$x = x.object;
 							$x.off('load');
 						
@@ -466,7 +467,7 @@
 								$caption.trigger('update', [x.captionText]).fadeIn(settings.fadeSpeed);
 								$closer.fadeIn(settings.fadeSpeed);
 								$pic.css('text-indent', 0).hide().fadeIn(settings.fadeSpeed, function() { isLocked = false; });
-								navPos = index;
+								navPos = x.index;
 								$nav.fadeIn(settings.fadeSpeed);
 
 							});
@@ -488,7 +489,7 @@
 										$caption.trigger('update', [x.captionText]).fadeIn(settings.fadeSpeed);
 										$closer.fadeIn(settings.fadeSpeed);
 										$pic.css('text-indent', 0).hide().fadeIn(settings.fadeSpeed, function() { isLocked = false; });
-										navPos = index;
+										navPos = x.index;
 										$nav.fadeIn(settings.fadeSpeed);
 
 										$popup
@@ -584,47 +585,50 @@
 					
 					});
 				
-				$this.find(settings.selector).each(function(index) {
-					
-					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox');
+				var open = function (link, e) {
+
+					link = $(link);
+
+					var index = link.index(),
+						img = link.find('img'),
+						data = link.data('poptrox'),
+						slide, tmp, caption;
 
 					// No href? Bail.
-						if (!a.attr('href'))
+						if (!link.attr('href'))
 							return;
 
-					x = {
-
-						src:			a.attr('href'),
-						captionText:	i.attr('title'),
-						width:			a.attr('width'),
-						height:			a.attr('height'),
+					slide = {
+						index: 			index,
+						link:			link,
+						src:			link.attr('href'),
+						captionText:	img.attr('title'),
+						width:			link.attr('width'),
+						height:			link.attr('height'),
 						type:			null,
 						object:			null
-
 					};
 					
 					// Determine caption.
 						
 						// No caption setting? Use default (title attribute of image).
 							if (!settings.caption)
-								c = i.attr('title');
+								caption = img.attr('title');
 						
 						// Function?
 							else if (typeof(settings.caption) == 'function')
-								c = (settings.caption)(a);
+								caption = (settings.caption)(a);
 						
 						// Selector?
 							else if ('selector' in settings.caption) {
 							
-								var s;
-							
-								s = a.find(settings.caption.selector);
+								var s = link.find(settings.caption.selector);
 								
 								if ('attribute' in settings.caption)
-									c = s.attr(settings.caption.attribute);
+									caption = s.attr(settings.caption.attribute);
 								else {
 									
-									c = s.html();
+									caption = s.html();
 									
 									if (settings.caption.remove === true)
 										s.remove();
@@ -633,7 +637,7 @@
 
 							}
 					
-						x.captionText = c;
+						slide.captionText = caption;
 
 					// If a data attribute exists, use it
 						if (data) {
@@ -647,22 +651,22 @@
 								// Size
 									if (tmp && tmp.length == 3) {
 										
-										x.width = tmp[1];
-										x.height = tmp[2];
+										slide.width = tmp[1];
+										slide.height = tmp[2];
 									
 									}
 								// Type
 									else
-										x.type = b[k];
+										slide.type = b[k];
 						
 							}
 						
 						}
 						
 					// No type? Attempt to guess it based on the href's domain
-						if (!x.type) {
+						if (!slide.type) {
 							
-							tmp = x.src.match(/http[s]?:\/\/([a-z0-9\.]+)\/.*/);
+							tmp = slide.src.match(/http[s]?:\/\/([a-z0-9\.]+)\/.*/);
 
 							if (!tmp || tmp.length < 2)
 								tmp = [false];
@@ -670,35 +674,35 @@
 							switch (tmp[1]) {
 								
 								case 'api.soundcloud.com':
-									x.type = 'soundcloud';
+									slide.type = 'soundcloud';
 									break;
 
 								case 'youtu.be':
-									x.type = 'youtube';
-									x.width = 800;
-									x.height = 480;
+									slide.type = 'youtube';
+									slide.width = 800;
+									slide.height = 480;
 									break;
 
 								case 'vimeo.com':
-									x.type = 'vimeo';
-									x.width = 800;
-									x.height = 480;
+									slide.type = 'vimeo';
+									slide.width = 800;
+									slide.height = 480;
 									break;
 
 								case 'wistia.net':
-									x.type = 'wistia';
-									x.width = 800;
-									x.height = 480;
+									slide.type = 'wistia';
+									slide.width = 800;
+									slide.height = 480;
 									break;
 
 								case 'bcove.me':
-									x.type = 'bcove';
-									x.width = 640;
-									x.height = 360;
+									slide.type = 'bcove';
+									slide.width = 640;
+									slide.height = 360;
 									break;
 
 								default:
-									x.type = 'image';
+									slide.type = 'image';
 									break;
 							
 							}
@@ -706,27 +710,27 @@
 						}
 					
 					// Create object (based on type)
-						tmp = x.src.match(/http([s]?):\/\/[a-z0-9\.]+\/(.*)/);
+						tmp = slide.src.match(/http([s]?):\/\/[a-z0-9\.]+\/(.*)/);
 
 						if (tmp)
-							x.prefix = 'http' + (tmp[1] == 's' ? 's' : '');
+							slide.prefix = 'http' + (tmp[1] == 's' ? 's' : '');
 
-						switch (x.type) {
+						switch (slide.type) {
 							
 							case 'ignore':
 								break;
 						
 							case 'iframe':
-								x.object = $('<iframe src="" frameborder="0"></iframe>');
-								x.object
+								slide.object = $('<iframe src="" frameborder="0"></iframe>');
+								slide.object
 									.on('click', function(e) { e.stopPropagation(); })
 									.css('cursor', 'auto');
 								
 								break;
 								
 							case 'ajax':
-								x.object = $('<div class="poptrox-ajax"></div>');
-								x.object
+								slide.object = $('<div class="poptrox-ajax"></div>');
+								slide.object
 									.on('click', function(e) { e.stopPropagation(); })
 									.css('cursor', 'auto')
 									.css('overflow', 'auto');
@@ -734,69 +738,70 @@
 								break;
 						
 							case 'soundcloud':
-								x.object = $('<iframe scrolling="no" frameborder="no" src=""></iframe>');
-								x.src = x.prefix + '://w.soundcloud.com/player/?url=' + escape(x.src);
-								x.width = '600';
-								x.height = "166";
+								slide.object = $('<iframe scrolling="no" frameborder="no" src=""></iframe>');
+								slide.src = slide.prefix + '://w.soundcloud.com/player/?url=' + escape(slide.src);
+								slide.width = '600';
+								slide.height = "166";
 								
 								break;
 
 							case 'youtube':
-								x.object = $('<iframe src="" frameborder="0" allowfullscreen="1"></iframe>');
-								x.src = x.prefix + '://www.youtube.com/embed/' + tmp[2];
+								slide.object = $('<iframe src="" frameborder="0" allowfullscreen="1"></iframe>');
+								slide.src = slide.prefix + '://www.youtube.com/embed/' + tmp[2];
 								
 								break;
 
 							case 'vimeo':
-								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
-								x.src = x.prefix + '://player.vimeo.com/video/' + tmp[2];
+								slide.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
+								slide.src = slide.prefix + '://player.vimeo.com/video/' + tmp[2];
 								
 								break;
 
 							case 'wistia':
-								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
-								x.src = x.prefix + '://fast.wistia.net/' + tmp[2];
+								slide.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
+								slide.src = slide.prefix + '://fast.wistia.net/' + tmp[2];
 								
 								break;
 
 							case 'bcove':
-								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1" width="100%"></iframe>');
-								x.src = x.prefix + '://bcove.me/' + tmp[2];
+								slide.object = $('<iframe src="" frameborder="0" allowFullScreen="1" width="100%"></iframe>');
+								slide.src = slide.prefix + '://bcove.me/' + tmp[2];
 								
 								break;
 
 							default:
-								x.object = $('<img src="" alt="" style="vertical-align:bottom" />');
+								slide.object = $('<img src="" alt="" style="vertical-align:bottom" />');
 								
+								// todo: fix preloading
+								/*
 								if (settings.preload) {
 									
 									var tmp = document.createElement('img');
-									tmp.src = x.src; cache.push(tmp);
+									tmp.src = slide.src; cache.push(tmp);
 								
 								}
+								*/
 								
 								break;
 						
 						}
 
-					if (x.type != 'ignore')
-						queue.push(x);
-					
-					i.attr('title', '');
-					
-					if (x.type != 'ignore')
-						a
-							.attr('href', '')
-							.css('outline', 0)
-							.on('click', function(e) {
-
+					if (slide.type != 'ignore')
+						link
+							//.attr('href', '')
+							.css('outline', 0);
+//							.on('click', function(e) {
 								e.preventDefault();
 								e.stopPropagation();
+								$popup.trigger('poptrox_open', [slide]);
 
-								$popup.trigger('poptrox_open', [index]);
+						//	});
 
-							});
+				}
 
+				//$this.find(settings.selector).each(function(index) {
+				$this.delegate(settings.selector, 'click', function (e) {
+					open(this, e);
 				});
 				
 			return $(this);
