@@ -41,7 +41,7 @@
 					popupHeight:					100,						// Popup height
 					popupIsFixed:					false,						// If true, popup won't resize to fit images
 					useBodyOverflow:				false,						// If true, the BODY tag is set to overflow: hidden when the popup is visible
-					usePopupEasyClose:				false,						// If true, popup can be closed by clicking on it anywhere
+					usePopupEasyClose:				true,						// If true, popup can be closed by clicking on it anywhere
 					usePopupForceClose:				false,						// If true, popup can be closed even while content is loading
 					usePopupLoader:					true,						// If true, show the popup loader
 					usePopupCloser:					true,						// If true, show the popup closer button/link
@@ -291,13 +291,21 @@
 					});
 
 				$nav_next
-					.on('click', function() {
+					.on('click', function(e) {
+
+						e.stopPropagation();
+						e.preventDefault();
 						$popup.trigger('poptrox_next');
+
 					});
 
 				$nav_previous
-					.on('click', function() {
+					.on('click', function(e) {
+
+						e.stopPropagation();
+						e.preventDefault();
 						$popup.trigger('poptrox_previous');
+
 					});
 
 				$overlay
