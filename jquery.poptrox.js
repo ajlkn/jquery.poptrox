@@ -775,17 +775,6 @@
 
 							default:
 								slide.object = $('<img src="" alt="" style="vertical-align:bottom" />');
-								
-								// todo: fix preloading
-								/*
-								if (settings.preload) {
-									
-									var tmp = document.createElement('img');
-									tmp.src = slide.src; cache.push(tmp);
-								
-								}
-								*/
-								
 								break;
 						
 						}
@@ -797,11 +786,31 @@
 						$popup.trigger('poptrox_open', [slide]);
 					}
 
-				}
+				};
+
+				var initCache = function () {
+					if (settings.preload) {
+						/*
+							for preloading, select links which don't have 
+							data-poptrox attribute on them, eg. image links
+						*/
+						$(settings.selector, $this)
+							.not('[data-poptrox]')
+							.each(function () {
+								var fullsizeLink = $(this).attr('href')
+									tmp = document.createElement('img');
+
+								tmp.src = fullsizeLink; 
+								cache.push(tmp);
+							});
+					}
+				};
 
 				$this.delegate(settings.selector, 'click', function (e) {
 					open(this, e);
 				});
+
+				initCache();
 				
 			return $(this);
 		
