@@ -98,7 +98,7 @@ caption: function(a) { /* return something */ },
 (Advanced) Uses a callback function to figure out the caption, where `a` is a jQuery object
 pointing to the anchor tag.
 
- - Poptrox is is actually using a delegate event handler on the container. That means, 
+ - Poptrox is actually using a delegate event handler on the container. That means, 
  that even dynamically created gallery entries will be handled properly.
  (*entries added dynamically are not preloaded automatically.*)
 
