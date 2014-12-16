@@ -41,7 +41,7 @@
 					popupHeight:					100,						// Popup height
 					popupIsFixed:					false,						// If true, popup won't resize to fit images
 					useBodyOverflow:				false,						// If true, the BODY tag is set to overflow: hidden when the popup is visible
-					usePopupEasyClose:				true,						// If true, popup can be closed by clicking on it anywhere
+					usePopupEasyClose:				false,						// If true, popup can be closed by clicking on it anywhere
 					usePopupForceClose:				false,						// If true, popup can be closed even while content is loading
 					usePopupLoader:					true,						// If true, show the popup loader
 					usePopupCloser:					true,						// If true, show the popup closer button/link
@@ -325,26 +325,12 @@
 
 					});
 
-				if (settings.usePopupEasyClose) {
-
-					$pic
-						.css('cursor', 'pointer')
-						.on('click', function(e) {
-
-							e.preventDefault();
-							e.stopPropagation();
-
-							$popup.trigger('poptrox_close');
-
-						});
-
-				}
-
 				$popup
 					.css('display', 'inline-block')
 					.css('vertical-align', 'middle')
 					.css('position', 'relative')
 					.css('z-index', 1)
+					.css('cursor', 'auto')
 					.appendTo($overlay)
 					.hide()
 					.on('poptrox_next', function() {
@@ -540,6 +526,30 @@
 
 					})
 					.trigger('poptrox_reset');
+
+					// Easy close.
+						if (settings.usePopupEasyClose) {
+
+							$caption.on('click', 'a', function(e) {
+								e.stopPropagation();
+							});
+
+							$popup
+								.css('cursor', 'pointer')
+								.on('click', function(e) {
+
+									e.stopPropagation();
+									e.preventDefault();
+
+									$popup.trigger('poptrox_close');
+
+								});
+						}
+						else
+							$popup
+								.on('click', function(e) {
+									e.stopPropagation();
+								});
 
 				$window
 					.keydown(function(e) {
