@@ -680,7 +680,7 @@
 					// No type? Attempt to guess it based on the href's domain
 						if (!x.type) {
 
-							tmp = x.src.match(/http[s]?:\/\/([a-z0-9\.]+)\/.*/);
+							tmp = x.src.match(/\/\/([a-z0-9\.]+)\/.*/);
 
 							if (!tmp || tmp.length < 2)
 								tmp = [false];
@@ -724,10 +724,7 @@
 						}
 
 					// Create object (based on type)
-						tmp = x.src.match(/http([s]?):\/\/[a-z0-9\.]+\/(.*)/);
-
-						if (tmp)
-							x.prefix = 'http' + (tmp[1] == 's' ? 's' : '');
+						tmp = x.src.match(/\/\/[a-z0-9\.]+\/(.*)/);
 
 						switch (x.type) {
 
@@ -753,7 +750,7 @@
 
 							case 'soundcloud':
 								x.object = $('<iframe scrolling="no" frameborder="no" src=""></iframe>');
-								x.src = x.prefix + '://w.soundcloud.com/player/?url=' + escape(x.src);
+								x.src = '//w.soundcloud.com/player/?url=' + escape(x.src);
 								x.width = '600';
 								x.height = "166";
 
@@ -761,25 +758,25 @@
 
 							case 'youtube':
 								x.object = $('<iframe src="" frameborder="0" allowfullscreen="1"></iframe>');
-								x.src = x.prefix + '://www.youtube.com/embed/' + tmp[2];
+								x.src = '//www.youtube.com/embed/' + tmp[1];
 
 								break;
 
 							case 'vimeo':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
-								x.src = x.prefix + '://player.vimeo.com/video/' + tmp[2];
+								x.src = '//player.vimeo.com/video/' + tmp[1];
 
 								break;
 
 							case 'wistia':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
-								x.src = x.prefix + '://fast.wistia.net/' + tmp[2];
+								x.src = '//fast.wistia.net/' + tmp[1];
 
 								break;
 
 							case 'bcove':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1" width="100%"></iframe>');
-								x.src = x.prefix + '://bcove.me/' + tmp[2];
+								x.src = '//bcove.me/' + tmp[1];
 
 								break;
 
