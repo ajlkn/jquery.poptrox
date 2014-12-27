@@ -808,6 +808,11 @@
 
 						}
 
+					// Fix src if protocol is 'file'.
+						if (window.location.protocol == 'file:'
+						&&	x.src.match(/^\/\//))
+							x.src = 'http:' + x.src;
+
 					if (x.type != 'ignore')
 						queue.push(x);
 
