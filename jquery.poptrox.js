@@ -435,13 +435,27 @@
 							else
 								$x.attr('src', x.src);
 
-							if (x.type != 'image')
+							if (x.type != 'image') {
+
+								var xwidth, xheight;
+
+								xwidth = x.width;
+								xheight = x.height;
+
+								if (xwidth.slice(-1) == '%')
+									xwidth = (parseInt(xwidth.substring(0, xwidth.length - 1)) / 100.00) * $window.width();
+
+								if (xheight.slice(-1) == '%')
+									xheight = (parseInt(xheight.substring(0, xheight.length - 1)) / 100.00) * $window.height();
+
 								$x
 									.css('position', 'relative')
 									.css('outline', '0')
 									.css('z-index', settings.baseZIndex + 100)
-									.width(x.width)
-									.height(x.height);
+									.width(xwidth)
+									.height(xheight);
+
+							}
 
 						// Initialize
 							$loader.trigger('startSpinning').fadeIn(300);
@@ -660,7 +674,7 @@
 
 							for (k in b) {
 
-								tmp = b[k].match(/([0-9]+)x([0-9]+)/);
+								tmp = b[k].match(/([0-9%]+)x([0-9%]+)/);
 
 								// Size
 									if (tmp && tmp.length == 3) {
