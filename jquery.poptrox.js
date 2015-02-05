@@ -631,7 +631,8 @@
 						width:			a.attr('width'),
 						height:			a.attr('height'),
 						type:			null,
-						object:			null
+						object:			null,
+						options:		null
 
 					};
 
@@ -670,24 +671,29 @@
 					// If a data attribute exists, use it
 						if (data) {
 
-							var k, b = data.split(',');
+							var b = data.split(',');
 
-							for (k in b) {
+							// Type.
+								if (0 in b)
+									x.type = b[0];
 
-								tmp = b[k].match(/([0-9%]+)x([0-9%]+)/);
+							// Size.
+								if (1 in b) {
 
-								// Size
+									tmp = b[1].match(/([0-9%]+)x([0-9%]+)/);
+
 									if (tmp && tmp.length == 3) {
 
 										x.width = tmp[1];
 										x.height = tmp[2];
 
 									}
-								// Type
-									else
-										x.type = b[k];
 
-							}
+								}
+
+							// Options.
+								if (2 in b)
+									x.options = b[2];
 
 						}
 
@@ -764,7 +770,7 @@
 
 							case 'soundcloud':
 								x.object = $('<iframe scrolling="no" frameborder="no" src=""></iframe>');
-								x.src = '//w.soundcloud.com/player/?url=' + escape(x.src);
+								x.src = '//w.soundcloud.com/player/?url=' + escape(x.src) + (x.options ? '&' + x.options : '');
 								x.width = '600';
 								x.height = "166";
 
@@ -772,25 +778,25 @@
 
 							case 'youtube':
 								x.object = $('<iframe src="" frameborder="0" allowfullscreen="1"></iframe>');
-								x.src = '//www.youtube.com/embed/' + tmp[1];
+								x.src = '//www.youtube.com/embed/' + tmp[1]  + (x.options ? '?' + x.options : '');
 
 								break;
 
 							case 'vimeo':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
-								x.src = '//player.vimeo.com/video/' + tmp[1];
+								x.src = '//player.vimeo.com/video/' + tmp[1]  + (x.options ? '?' + x.options : '');
 
 								break;
 
 							case 'wistia':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
-								x.src = '//fast.wistia.net/' + tmp[1];
+								x.src = '//fast.wistia.net/' + tmp[1] + (x.options ? '?' + x.options : '');
 
 								break;
 
 							case 'bcove':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1" width="100%"></iframe>');
-								x.src = '//bcove.me/' + tmp[1];
+								x.src = '//bcove.me/' + tmp[1] + (x.options ? '?' + x.options : '');
 
 								break;
 
