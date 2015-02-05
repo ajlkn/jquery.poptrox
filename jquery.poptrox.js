@@ -628,8 +628,8 @@
 
 						src:			a.attr('href'),
 						captionText:	i.attr('title'),
-						width:			a.attr('width'),
-						height:			a.attr('height'),
+						width:			null,
+						height:			null,
 						type:			null,
 						object:			null,
 						options:		null
@@ -713,26 +713,18 @@
 
 								case 'youtu.be':
 									x.type = 'youtube';
-									x.width = 800;
-									x.height = 480;
 									break;
 
 								case 'vimeo.com':
 									x.type = 'vimeo';
-									x.width = 800;
-									x.height = 480;
 									break;
 
 								case 'wistia.net':
 									x.type = 'wistia';
-									x.width = 800;
-									x.height = 480;
 									break;
 
 								case 'bcove.me':
 									x.type = 'bcove';
-									x.width = 640;
-									x.height = 360;
 									break;
 
 								default:
@@ -757,6 +749,11 @@
 									.on('click', function(e) { e.stopPropagation(); })
 									.css('cursor', 'auto');
 
+								if (!x.width || !x.height) {
+									x.width = "600";
+									x.height = "400";
+								}
+
 								break;
 
 							case 'ajax':
@@ -765,6 +762,11 @@
 									.on('click', function(e) { e.stopPropagation(); })
 									.css('cursor', 'auto')
 									.css('overflow', 'auto');
+
+								if (!x.width || !x.height) {
+									x.width = "600";
+									x.height = "400";
+								}
 
 								break;
 
@@ -780,11 +782,21 @@
 								x.object = $('<iframe src="" frameborder="0" allowfullscreen="1"></iframe>');
 								x.src = '//www.youtube.com/embed/' + tmp[1]  + (x.options ? '?' + x.options : '');
 
+								if (!x.width || !x.height) {
+									x.width = "800";
+									x.height = "480";
+								}
+
 								break;
 
 							case 'vimeo':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
 								x.src = '//player.vimeo.com/video/' + tmp[1]  + (x.options ? '?' + x.options : '');
+
+								if (!x.width || !x.height) {
+									x.width = "800";
+									x.height = "480";
+								}
 
 								break;
 
@@ -792,11 +804,21 @@
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1"></iframe>');
 								x.src = '//fast.wistia.net/' + tmp[1] + (x.options ? '?' + x.options : '');
 
+								if (!x.width || !x.height) {
+									x.width = "800";
+									x.height = "480";
+								}
+
 								break;
 
 							case 'bcove':
 								x.object = $('<iframe src="" frameborder="0" allowFullScreen="1" width="100%"></iframe>');
 								x.src = '//bcove.me/' + tmp[1] + (x.options ? '?' + x.options : '');
+
+								if (!x.width || !x.height) {
+									x.width = "640";
+									x.height = "360";
+								}
 
 								break;
 
@@ -809,6 +831,9 @@
 									tmp.src = x.src; cache.push(tmp);
 
 								}
+
+								x.width = a.attr('width');
+								x.height = a.attr('height');
 
 								break;
 
@@ -823,6 +848,7 @@
 						queue.push(x);
 
 					i.attr('title', '');
+
 
 					if (x.type != 'ignore')
 						a
