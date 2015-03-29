@@ -163,7 +163,7 @@
 								.css('line-height', settings.popupCaptionHeight + 'px');
 								
 							if (settings.popupCaptionTextSize)
-								$caption.css('font-size', popupCaptionTextSize);
+								$caption.css('font-size', settings.popupCaptionTextSize);
 						
 						}
 							
