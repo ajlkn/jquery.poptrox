@@ -163,7 +163,7 @@
 								.css('line-height', settings.popupCaptionHeight + 'px');
 								
 							if (settings.popupCaptionTextSize)
-								$caption.css('font-size', popupCaptionTextSize);
+								$caption.css('font-size', settings.popupCaptionTextSize);
 						
 						}
 							
@@ -291,12 +291,14 @@
 					});
 
 				$nav_next
-					.on('click', function() {
+					.on('click', function(e) {
+						e.stopPropagation();
 						$popup.trigger('poptrox_next');
 					});
 
 				$nav_previous
-					.on('click', function() {
+					.on('click', function(e) {
+						e.stopPropagation();
 						$popup.trigger('poptrox_previous');
 					});
 
