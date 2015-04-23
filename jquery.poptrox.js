@@ -623,6 +623,10 @@
 
 					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox');
 
+					// Ignore? Skip.
+						if (data == 'ignore')
+							return;
+
 					// No href? Bail.
 						if (!a.attr('href'))
 							return;
@@ -743,9 +747,6 @@
 
 						switch (x.type) {
 
-							case 'ignore':
-								break;
-
 							case 'iframe':
 								x.object = $('<iframe src="" frameborder="0"></iframe>');
 								x.object
@@ -847,24 +848,21 @@
 						&&	x.src.match(/^\/\//))
 							x.src = 'http:' + x.src;
 
-					if (x.type != 'ignore')
-						queue.push(x);
+					queue.push(x);
 
 					i.attr('title', '');
 
+					a
+						.attr('href', '')
+						.css('outline', 0)
+						.on('click', function(e) {
 
-					if (x.type != 'ignore')
-						a
-							.attr('href', '')
-							.css('outline', 0)
-							.on('click', function(e) {
+							e.preventDefault();
+							e.stopPropagation();
 
-								e.preventDefault();
-								e.stopPropagation();
+							$popup.trigger('poptrox_open', [index]);
 
-								$popup.trigger('poptrox_open', [index]);
-
-							});
+						});
 
 				});
 
