@@ -1,4 +1,4 @@
-/* jquery.poptrox.js v2.5.1-dev | (c) n33 | n33.co | MIT licensed */
+/* jquery.poptrox.js v2.5.1 | (c) n33 | n33.co | MIT licensed */
 
 (function($) {
 
