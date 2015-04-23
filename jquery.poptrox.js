@@ -374,7 +374,10 @@
 						$closer.hide();
 						$nav.hide();
 						$pic.hide();
-						$x.detach();
+
+						$x
+							.attr('src', '')
+							.detach();
 
 					})
 					.on('poptrox_open', function(e, index) {
