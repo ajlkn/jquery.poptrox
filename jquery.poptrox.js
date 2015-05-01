@@ -860,7 +860,7 @@
 							e.preventDefault();
 							e.stopPropagation();
 
-							$popup.trigger('poptrox_open', [index]);
+							$popup.trigger('poptrox_open', [queue.length-1]);
 
 						});
 
