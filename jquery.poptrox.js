@@ -619,6 +619,14 @@
 
 					});
 
+				function createImageOnClickHandler(index) {
+				    return function(e) {
+					    e.preventDefault();
+					    e.stopPropagation();
+					    $popup.trigger('poptrox_open', [index]);
+				    };
+				}
+
 				$this.find(settings.selector).each(function(index) {
 
 					var x, tmp, a = $(this), i = a.find('img'), data = a.data('poptrox');
@@ -860,7 +868,7 @@
 							e.preventDefault();
 							e.stopPropagation();
 
-							$popup.trigger('poptrox_open', [queue.length-1]);
+							$popup.trigger('poptrox_open', createImageOnClickHandler(queue.length-1));
 
 						});
 
