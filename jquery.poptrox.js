@@ -863,14 +863,7 @@
 					a
 						.attr('href', '')
 						.css('outline', 0)
-						.on('click', function(e) {
-
-							e.preventDefault();
-							e.stopPropagation();
-
-							$popup.trigger('poptrox_open', createImageOnClickHandler(queue.length-1));
-
-						});
+						.on('click', createImageOnClickHandler(queue.length-1));
 
 				});
 
