@@ -760,7 +760,8 @@
 								}
 
 								if (settings.allowFullScreen) {
-									x.attr('allowfullscreen', 1);
+									x.object
+										.attr('allowfullscreen', 1);
 								}
 
 								break;
