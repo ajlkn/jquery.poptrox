@@ -256,7 +256,8 @@ foo.poptrox({
 	popupNavPreviousSelector:	'.nav-previous',// (Advanced) Popup Nav Previous selector
 	popupNavNextSelector:		'.nav-next',	// (Advanced) Popup Nav Next selector
 	onPopupClose:				null,			// Called when popup closes
-	onPopupOpen:				null			// Called when popup opens
+	onPopupOpen:				null,			// Called when popup opens
+	allowFullScreen:			false			// If true, iframe will get 'allowfullscreen' attribute
 });
 ```
 
@@ -264,7 +265,7 @@ foo.poptrox({
 
 jquery.poptrox.js is released under the MIT license.
 
-Copyright © n33
+Copyright ï¿½ n33
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the

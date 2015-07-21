@@ -68,7 +68,8 @@
 					popupNavPreviousSelector:		'.nav-previous',			// (Advanced) Popup Nav Previous selector
 					popupNavNextSelector:			'.nav-next',				// (Advanced) Popup Nav Next selector
 					onPopupClose:					null,						// Called when popup closes
-					onPopupOpen:					null						// Called when popup opens
+					onPopupOpen:					null,						// Called when popup opens
+					allowFullScreen:				false						// If true, iframe will get 'allowfullscreen' attribute
 
 				}, options);
 
@@ -756,6 +757,10 @@
 								if (!x.width || !x.height) {
 									x.width = "600";
 									x.height = "400";
+								}
+
+								if (settings.allowFullScreen) {
+									x.attr('allowfullscreen', 1);
 								}
 
 								break;
