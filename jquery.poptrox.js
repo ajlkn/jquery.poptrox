@@ -68,7 +68,8 @@
 					popupNavPreviousSelector:		'.nav-previous',			// (Advanced) Popup Nav Previous selector
 					popupNavNextSelector:			'.nav-next',				// (Advanced) Popup Nav Next selector
 					onPopupClose:					null,						// Called when popup closes
-					onPopupOpen:					null						// Called when popup opens
+					onPopupOpen:					null,						// Called when popup opens
+                    onPopupChange:                  null                        // Called when switch event is triggered
 
 				}, options);
 
@@ -427,6 +428,9 @@
 								.css('text-indent', '-9999px')
 								.show()
 								.append($x);
+
+                            if (settings.onPopupChange)
+                                (settings.onPopupChange)(queue[index]);
 
 							if (x.type == 'ajax')
 								$.get(x.src, function(data) {
@@ -852,8 +856,10 @@
 
 					i.attr('title', '');
 
+					jQuery.extend( x, $(this).data());
+
 					a
-						.attr('href', '')
+						.attr('href', x.slug)
 						.css('outline', 0)
 						.on('click', function(e) {
 
