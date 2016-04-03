@@ -68,7 +68,8 @@
 					popupNavPreviousSelector:		'.nav-previous',			// (Advanced) Popup Nav Previous selector
 					popupNavNextSelector:			'.nav-next',				// (Advanced) Popup Nav Next selector
 					onPopupClose:					null,						// Called when popup closes
-					onPopupOpen:					null						// Called when popup opens
+					onPopupOpen:					null,						// Called when popup opens
+					onCaptionLoaded:		  null						// Called when caption is loaded
 
 				}, options);
 
@@ -274,6 +275,9 @@
 							s = settings.popupBlankCaptionText;
 
 						$caption.html(s);
+
+						if (settings.onCaptionLoaded)
+							(settings.onCaptionLoaded)($popup);
 
 					});
 
