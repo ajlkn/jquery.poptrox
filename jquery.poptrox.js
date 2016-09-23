@@ -470,7 +470,7 @@
 								.width(settings.popupWidth)
 								.height(settings.popupHeight);
 
-							$x.load(function() {
+							$x.on("load",function() {
 
 								$x.off('load');
 								$loader.hide().trigger('stopSpinning');
@@ -485,7 +485,7 @@
 						}
 						else {
 
-							$x.load(function() {
+							$x.on("load",function() {
 
 								updateWH();
 
