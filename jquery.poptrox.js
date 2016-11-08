@@ -848,7 +848,8 @@
 						&&	x.src.match(/^\/\//))
 							x.src = 'http:' + x.src;
 
-					queue.push(x);
+					queue.push(x); //origin code
+//					queue[index] = x; //mychage code
 
 					i.attr('title', '');
 
