@@ -297,6 +297,7 @@
 						e.preventDefault();
 						$popup.trigger('poptrox_next');
 
+						return false;
 					});
 
 				$nav_previous
@@ -306,6 +307,7 @@
 						e.preventDefault();
 						$popup.trigger('poptrox_previous');
 
+						return false;
 					});
 
 				$overlay
